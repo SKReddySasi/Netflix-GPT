@@ -1,11 +1,39 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
+import InputField from "../utils/InputField";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from "../utils/validate";
+import Button from "../utils/Button";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [nameErrorMessage, setNameErrorMessage] = useState(null);
+  const [emailErrorMessage, setEmailErrorMessage] = useState(null);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState(null);
 
-  const handleSignInForm = (e) => {
-    e.preventDefault();
+  // reference variables using useRef Hook
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const handleSignIn = () => {
+    const emailMessage = validateEmail(emailRef.current.value);
+    setEmailErrorMessage(emailMessage);
+    const passwordMessage = validatePassword(passwordRef.current.value);
+    setPasswordErrorMessage(passwordMessage);
+  };
+
+  const handleSignUp = () => {
+    // for Signup again am using signin Validations
+    handleSignIn();
+    const nameMessage = validateName(nameRef.current.value);
+    setNameErrorMessage(nameMessage);
+  };
+
+  const handleToggleForm = () => {
     setIsSignInForm(!isSignInForm);
   };
 
@@ -20,49 +48,67 @@ const Login = () => {
         />
         <div className="absolute z-10 opacity-50 top-0 bg-black w-full min-h-screen"></div>
       </div>
-      <form className="absolute p-14 w-[30%] my-24 m-auto right-0 left-0 bg-black text-white z-20 rounded-lg bg-opacity-70">
+
+      {/* SignIn / SignUp Form Code */}
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="absolute p-14 w-[30%] my-24 m-auto right-0 left-0 bg-black text-white z-20 rounded-lg bg-opacity-70"
+      >
         <h1 className="text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign up"}
         </h1>
+
+        {/* Below Name Field is for SignUp Form */}
         {!isSignInForm && (
-          <input
-            className="w-full p-3 my-2 rounded-md bg-[#333]"
-            id="Name"
-            type="text"
-            placeholder="Enter Full Name"
-            autoComplete="off"
-          />
+          <>
+            <InputField
+              inputRef={nameRef}
+              id="Name"
+              type="text"
+              placeholder="Enter Full Name"
+              autoComplete="off"
+            />
+            {nameErrorMessage && (
+              <p className="text-[red]">{nameErrorMessage}</p>
+            )}
+          </>
         )}
-        <input
-          className="w-full p-3 my-2 rounded-md bg-[#333]"
+
+        <InputField
+          inputRef={emailRef}
           id="Email"
           type="text"
           placeholder="Email or phone number"
           autoComplete="off"
         />
-        <input
-          className="w-full p-3 my-2 rounded-md bg-[#333]"
+        {/* Error message for Email ID  */}
+        {emailErrorMessage && <p className="text-[red]">{emailErrorMessage}</p>}
+
+        <InputField
+          inputRef={passwordRef}
           id="password"
-          type="password"
+          type="text"
           placeholder="Password"
+          autoComplete="off"
         />
-        {isSignInForm ? (
-          <button className="w-full p-3 my-6 bg-[#e50914] rounded-md">
-            Sign In
-          </button>
-        ) : (
-          <button className="w-full p-3 my-6 bg-[#e50914] rounded-md">
-            Sign Up
-          </button>
+        {/* Error message for Password  */}
+        {passwordErrorMessage && (
+          <p className="text-[red]">{passwordErrorMessage}</p>
         )}
 
-        <p className="text-[#737373]">
-          {isSignInForm ? "New to Neflix?" : "Already have an Account"}
+        {isSignInForm ? (
+          <Button text="Sign In" onClick={handleSignIn} />
+        ) : (
+          <Button text="Sign Up" onClick={handleSignUp} />
+        )}
+
+        <p className="text-[#737373] py-8">
+          {isSignInForm ? "New to Neflix?" : "Already registered?"}
 
           <button
             type="submit"
             className="text-white font-light cursor-pointer px-2"
-            onClick={handleSignInForm}
+            onClick={handleToggleForm}
           >
             {isSignInForm ? "Sign up now" : " Sign In now"}
           </button>
