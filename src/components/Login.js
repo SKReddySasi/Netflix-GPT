@@ -78,7 +78,7 @@ const Login = () => {
           inputRef={emailRef}
           id="Email"
           type="text"
-          placeholder="Email or phone number"
+          placeholder="Email Address"
           autoComplete="off"
         />
         {/* Error message for Email ID  */}
@@ -102,7 +102,7 @@ const Login = () => {
           <Button text="Sign Up" onClick={handleSignUp} />
         )}
 
-        <p className="text-[#737373] py-8">
+        <p className="text-[#737373] pt-12 pb-2">
           {isSignInForm ? "New to Neflix?" : "Already registered?"}
 
           <button
@@ -112,6 +112,10 @@ const Login = () => {
           >
             {isSignInForm ? "Sign up now" : " Sign In now"}
           </button>
+        </p>
+
+        <p className="text-[#8c8c8c] pb-8 text-xs">
+          This page is protected by Google reCAPTCHA to ensure you're not a bot.
         </p>
       </form>
     </div>
