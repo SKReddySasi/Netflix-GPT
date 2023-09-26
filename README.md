@@ -40,5 +40,7 @@
             -  Configure as a single-page app (rewrite all urls to /index.html)? --> No
             - Set up automatic builds and deploys with GitHub? --> No
             ==> Then "firebase.json" and ".firebaserc" files have created
-    - Before Deploying we have to build our project using 
-        - npm run build
+        - Before Deploying we have to build our project using 
+            - npm run build
+        - firebase deploy
+            - After that we will get Hosting URL: https://sk-netflix-gpt.web.app
