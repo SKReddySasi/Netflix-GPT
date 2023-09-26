@@ -8,11 +8,18 @@ import {
 } from "../utils/validate";
 import Button from "../utils/Button";
 
+import { auth } from "../utils/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [nameErrorMessage, setNameErrorMessage] = useState(null);
   const [emailErrorMessage, setEmailErrorMessage] = useState(null);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState(null);
+  const [authError, setAuthError] = useState(null);
 
   // reference variables using useRef Hook
   const nameRef = useRef(null);
@@ -24,6 +31,44 @@ const Login = () => {
     setEmailErrorMessage(emailMessage);
     const passwordMessage = validatePassword(passwordRef.current.value);
     setPasswordErrorMessage(passwordMessage);
+
+    if (!isSignInForm) {
+      // Sign Up Logic
+      createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log("User is valid");
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setAuthError(errorCode + " -> " + errorMessage);
+        });
+    } else {
+      // Sign In Logic
+      signInWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log("Signed In User is Valid");
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setAuthError(errorCode + " --> " + errorMessage);
+        });
+    }
   };
 
   const handleSignUp = () => {
@@ -31,6 +76,42 @@ const Login = () => {
     handleSignIn();
     const nameMessage = validateName(nameRef.current.value);
     setNameErrorMessage(nameMessage);
+
+    // if (!isSignInForm) {
+    //   // Sign Up Logic
+    //   createUserWithEmailAndPassword(
+    //     auth,
+    //     emailRef.current.value,
+    //     passwordRef.current.value
+    //   )
+    //     .then((userCredential) => {
+    //       // Signed in
+    //       const user = userCredential.user;
+    //       console.log(user);
+    //     })
+    //     .catch((error) => {
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
+    //       setAuthError(errorCode + " -> " + errorMessage);
+    //     });
+    // } else {
+    //   // Sign In Logic
+    //   signInWithEmailAndPassword(
+    //     auth,
+    //     emailRef.current.value,
+    //     passwordRef.current.value
+    //   )
+    //     .then((userCredential) => {
+    //       // Signed in
+    //       const user = userCredential.user;
+    //       console.log(user);
+    //     })
+    //     .catch((error) => {
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
+    //       setAuthError(errorCode + " --> " + errorMessage);
+    //     });
+    // }
   };
 
   const handleToggleForm = () => {
@@ -87,7 +168,7 @@ const Login = () => {
         <InputField
           inputRef={passwordRef}
           id="password"
-          type="text"
+          type="password"
           placeholder="Password"
           autoComplete="off"
         />
@@ -95,6 +176,8 @@ const Login = () => {
         {passwordErrorMessage && (
           <p className="text-[red]">{passwordErrorMessage}</p>
         )}
+
+        {authError && <p className="text-[red]">{authError}</p>}
 
         {isSignInForm ? (
           <Button text="Sign In" onClick={handleSignIn} />
