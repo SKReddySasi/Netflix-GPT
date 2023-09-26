@@ -35,22 +35,3 @@ export const validatePassword = (password) => {
 
   return null;
 };
-
-//   export const validateEmailPassword = (email, password) => {
-//     // regular expression for Email & Password
-//     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,})$/;
-//     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-
-//     // returns a "boolean" value indicating whether the email & password address is valid according to the regular expression.
-//     const isValidEmail = emailRegex.test(email);
-//     const isValidPassword = passwordRegex.test(password);
-
-//     if (!isValidEmail) {
-//       return "Email Id is Not Valid";
-//     }
-//     if (!isValidPassword) {
-//       return "Password is Not Valid";
-//     }
-
-//     return console.log("Email & Password is Valid");
-//   };
